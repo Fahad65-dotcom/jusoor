@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -q jusoor_github_ready.zip         - run: |
-          sed -i 's/version "9.1.0"/version "9.1.1"/' jusoor_app/android/settings.gradle.kts   
+      - name: Unzip project
+        run: unzip -q jusoor_github_ready.zip
+      - name: Fix AGP version
+        run: sed -i 's/version "9.1.0"/version "9.1.1"/' jusoor_app/android/settings.gradle.kts
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -20,7 +22,8 @@ jobs:
         with:
           channel: stable
           cache: true
-      - working-directory: jusoor_app
+      - name: Build APK
+        working-directory: jusoor_app
         run: |
           flutter pub get
           flutter build apk --release
